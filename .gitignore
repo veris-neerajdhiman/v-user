@@ -90,3 +90,6 @@ ENV/
 
 # IDE
 .idea/
+
+# Django Media files
+media/
