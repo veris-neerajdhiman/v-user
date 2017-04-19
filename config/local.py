@@ -32,7 +32,7 @@ DATABASES = {
         # The PostgreSQL backend (django.db.backends.postgresql_psycopg2)
         # is also available as django.db.backends.postgresql. :)
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_setting('DATABASE_NAME'),
+        'NAME': get_env_setting('DATABASE_NAME_USER'),
         'USER': get_env_setting('DATABASE_USER'),
         'PASSWORD': get_env_setting('DATABASE_PASSWORD'),
         'HOST': get_env_setting('DATABASE_HOST'),
