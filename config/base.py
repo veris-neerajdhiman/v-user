@@ -242,12 +242,16 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'rest_framework',
     'rest_framework_swagger',
+    'imagekit',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-
+    'accounts',
 )
+
+AUTH_USER_MODEL = "accounts.User"
+
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
