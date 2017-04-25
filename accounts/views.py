@@ -48,3 +48,15 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return serializers.UserCreateSerializer
         return self.serializer_class
+
+    def get_or_create_shadow_user(self, request):
+        """This function is used to get or create shadow user, to be used by Member Service
+
+        :return: user instance
+        """
+        # ToDo: Limit this API usage by AM server so that only those services can create Shadow User who are entitled to.
+
+        serializer = serializers.ShadowUserCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

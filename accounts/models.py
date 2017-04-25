@@ -95,7 +95,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=uuid.uuid4,
         help_text=_('User uuid, this token will be used to link user in other services.'),
     )
-
     avatar = models.ImageField(
         _('User Profile Picture'),
         upload_to=upload_avatar_to

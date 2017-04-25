@@ -34,9 +34,9 @@ user_detail = views.UserViewSet.as_view({
     'delete': 'destroy'
 })
 
-# adhoc_user = views.UserViewSet.as_view({
-#     'post': 'create_adhoc_user'
-# })
+shadow_user = views.UserViewSet.as_view({
+    'post': 'get_or_create_shadow_user'
+})
 
 urlpatterns = [
     url(r'^$',
@@ -45,9 +45,8 @@ urlpatterns = [
     url(r'^(?P<uuid>{uuid})/$'.format(uuid=UUID_REGEX),
         user_detail,
         name='user-detail'),
-    # url(r'^adhoc/$',
-    #     adhoc_user,
-    #     name='adhoc-user'),
+    url(r'^shadow/$',
+        shadow_user,
+        name='get-or-create-shadow-user'),
 ]
 
-# own app

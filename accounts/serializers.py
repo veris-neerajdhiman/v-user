@@ -18,9 +18,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 # Django
-from django.db import IntegrityError
 from django.contrib.auth import get_user_model
-
+from django.db import IntegrityError
 # local
 
 # own app
@@ -54,3 +53,31 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('uuid', 'first_name', 'last_name', 'email', 'avatar', 'avatar_thumbnail', )
+
+
+class ShadowUserCreateSerializer(serializers.ModelSerializer):
+    """This Serializer is used when we are creating a shadow User.
+    """
+    uuid = serializers.UUIDField(read_only=True)
+    email = serializers.EmailField(source='username',
+                                   required=True )
+    avatar_thumbnail = serializers.ImageField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('uuid', 'first_name', 'last_name', 'email', 'avatar', 'avatar_thumbnail', )
+
+    def create(self, validated_data):
+        """Here we check wether already an user exists or not, If not then create else return same user instance.
+
+        :param validated_data: serializer valid data
+        :return: user instance
+        """
+        # email is stored in username field and this is unique so if when we will try to create user with validated data
+        # if username field violates unique Rule , db will raise IntegrityError and we will catch this error return
+        # existing user instance.
+
+        try:
+            return super(ShadowUserCreateSerializer, self).create(validated_data)
+        except IntegrityError:
+            return User.objects.get(username=validated_data.get('username'))
