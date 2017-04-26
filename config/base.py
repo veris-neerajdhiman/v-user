@@ -326,3 +326,18 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
+
+
+# SERVICE UUID's Which can be assigned to USer
+ORGANIZATION_IDENTIFIER = get_env_setting('ORGANIZATION_IDENTIFIER')
+DEFAULT_ORGANIZATION_PERMISSION_SET = {
+    'create': True,
+    'update': True,
+    'delete': True,
+    'read': True
+}
+
+# AM SERVER API's URL's
+AM_SERVER_URL = get_env_setting('AM_SERVER_URL')
+ADD_POLICY_API_PATH = 'micro-service/am/policy/'
+VALIDATE_POLICY_API_PATH = 'micro-service/am/policy/validate/'

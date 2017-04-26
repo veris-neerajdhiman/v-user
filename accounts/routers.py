@@ -28,6 +28,7 @@ user_list = views.UserViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
+
 user_detail = views.UserViewSet.as_view({
     'get': 'retrieve',
     'patch': 'partial_update',
@@ -36,6 +37,10 @@ user_detail = views.UserViewSet.as_view({
 
 shadow_user = views.UserViewSet.as_view({
     'post': 'get_or_create_shadow_user'
+})
+
+user_memberships = views.UserViewSet.as_view({
+    'get': 'get_user_memberships'
 })
 
 urlpatterns = [
@@ -48,5 +53,8 @@ urlpatterns = [
     url(r'^shadow/$',
         shadow_user,
         name='get-or-create-shadow-user'),
+    url(r'^(?P<uuid>{uuid})/memberships/$'.format(uuid=UUID_REGEX),
+        user_memberships,
+        name='get-user-memberships'),
 ]
 

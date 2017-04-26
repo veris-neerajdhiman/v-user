@@ -40,6 +40,19 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
     lookup_field = 'uuid'
 
+    def get_queryset(self):
+        """
+        Optionally restricts the returned users,
+        by filtering against a `is_active` query parameter in the URL.
+        """
+        queryset = self.queryset
+
+        # filter for active users
+        is_active = self.request.query_params.get('is_active', None)
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active)
+        return queryset
+
     def get_serializer_class(self):
         """For POST method we will use different Serializer
 
@@ -60,3 +73,10 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_user_memberships(self, request):
+        """
+
+        :return: User MemberShips list
+        """
+        pass
