@@ -36,6 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
     model = User
     queryset = model.objects.all()
     # TODO : remove AllowAny permission with proper permission class
+    # TODO : User Self permission are not handled via AM server, handle them using AM
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.UserSerializer
     lookup_field = 'uuid'

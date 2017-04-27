@@ -23,11 +23,17 @@ from django.conf import settings
 # own app
 
 
+ADD_POLICY_URL = '{0}{1}'.format(getattr(settings, 'AM_SERVER_URL'),
+                                      getattr(settings, 'ADD_POLICY_API_PATH'))
+
+VALIDATE_POLICY_URL = '{0}{1}'.format(getattr(settings, 'AM_SERVER_URL'),
+                                      getattr(settings, 'VALIDATE_POLICY_API_PATH'))
+
 def add_user_policy_for_organization(user_uuid):
     """
     SAMPLE POST Data :
         {
-        "source":"user:2db95648-b5ea-458a-9f07-a9ef51bbca21",
+        "source":"user:2db95648-b5ea-458a-9f07-a9ef51bbca21:",
         "source_permission_set":[
             {
             "target":"vrn:resource:organization:",
@@ -39,8 +45,6 @@ def add_user_policy_for_organization(user_uuid):
 
     }
     """
-    url = '{0}{1}'.format(getattr(settings, 'AM_SERVER_URL'), getattr(settings, 'ADD_POLICY_API_PATH'))
-
     permission_set = []
 
     permissions = getattr(settings, 'DEFAULT_ORGANIZATION_PERMISSION_SET')
@@ -53,10 +57,10 @@ def add_user_policy_for_organization(user_uuid):
     permission_set.append(permissions)
 
     data = {
-        'source': 'user:{0}'.format(user_uuid),
+        'source': 'user:{0}:'.format(user_uuid),
         'source_permission_set':permission_set
     }
 
-    rq = requests.post(url, json=data, verify=True)
+    rq = requests.post(ADD_POLICY_URL, json=data, verify=True)
 
     return rq
