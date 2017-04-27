@@ -75,13 +75,18 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def user_login(self):
+    def create(self, request):
         """
 
-        :return: user token
+        :param request:
+        :return:
         """
-        # ToDo : temparary login solution.
+        # ToDo: juggad to avoid password in response.Fix It with some permanent solution.
 
+        original_response = super(UserViewSet, self).create(request)
+        user = User.objects.get(uuid=original_response.data.get('uuid'))
+        response = serializers.UserSerializer(instance=user)
+        return Response(response.data, status=status.HTTP_201_CREATED)
 
     def get_user_memberships(self, request):
         """

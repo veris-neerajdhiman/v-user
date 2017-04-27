@@ -44,6 +44,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     """This Serializer is used when we are creating an User.
     """
     uuid = serializers.UUIDField(read_only=True)
+    password = serializers.CharField(required=True)
     email = serializers.EmailField(source='username',
                                    required=True,
                                    validators=[UniqueValidator(queryset=User.objects.all())]
@@ -52,7 +53,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uuid', 'first_name', 'last_name', 'email', 'avatar', 'avatar_thumbnail', )
+        fields = ('uuid', 'first_name', 'last_name', 'password', 'email', 'avatar', 'avatar_thumbnail', )
+
+    def create(self, validated_data):
+        """
+
+        :param validated_data: Serializer validated data
+        :return: user object
+        """
+        password = validated_data.pop('password')
+        user = super(UserCreateSerializer, self).create(validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class ShadowUserCreateSerializer(serializers.ModelSerializer):
