@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 
 # rest-framework
-from rest_framework import viewsets, status, permissions
+from rest_framework import viewsets, status, permissions, generics
 from rest_framework.response import Response
 
 # local
@@ -75,9 +75,46 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def user_login(self):
+        """
+
+        :return: user token
+        """
+        # ToDo : temparary login solution.
+
+
     def get_user_memberships(self, request):
         """
 
         :return: User MemberShips list
         """
         pass
+
+
+class LoginViewSet(viewsets.GenericViewSet):
+    """
+    We'll keep the LoginView simple for now.
+    """
+    serializer_class = serializers.LoginSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def user_login(self, request):
+        """
+        :param request: Django request
+        :return:
+        """
+        # Will only match user name password for now and return user unique uuid in place of token
+        # because right ow not sure how we will do authentication.
+
+        # ToDo : Replace login process with some valid Login Mechanism
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            user = User.objects.get(username=serializer.data.get('username'))
+            if user.check_password(serializer.data.get('password')):
+                return Response({'token': user.uuid}, status=status.HTTP_200_OK)
+        except:
+            pass
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+

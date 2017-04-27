@@ -81,3 +81,13 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
             return super(ShadowUserCreateSerializer, self).create(validated_data)
         except IntegrityError:
             return User.objects.get(username=validated_data.get('username'))
+
+
+class LoginSerializer(serializers.Serializer):
+    """
+
+    """
+    username = serializers.CharField(required=True)
+
+    # TODO create a password field to be used
+    password = serializers.CharField(required=True)

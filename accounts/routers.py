@@ -35,6 +35,10 @@ user_detail = views.UserViewSet.as_view({
     'delete': 'destroy'
 })
 
+user_login = views.LoginViewSet.as_view({
+    'post': 'user_login'
+})
+
 shadow_user = views.UserViewSet.as_view({
     'post': 'get_or_create_shadow_user'
 })
@@ -50,6 +54,9 @@ urlpatterns = [
     url(r'^(?P<uuid>{uuid})/$'.format(uuid=UUID_REGEX),
         user_detail,
         name='user-detail'),
+    url(r'^login/$'.format(uuid=UUID_REGEX),
+        user_login,
+        name='user-login'),
     url(r'^shadow/$',
         shadow_user,
         name='get-or-create-shadow-user'),
