@@ -330,6 +330,8 @@ REST_FRAMEWORK = {
 
 # SERVICE UUID's Which can be assigned to USer
 ORGANIZATION_IDENTIFIER = get_env_setting('ORGANIZATION_IDENTIFIER')
+RUNTIME_IDENTIFIER = get_env_setting('VRT_IDENTIFIER')
+
 DEFAULT_ORGANIZATION_PERMISSION_SET = {
     'create': True,
     'update': True,
