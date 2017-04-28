@@ -12,19 +12,20 @@
 from __future__ import unicode_literals
 
 # 3rd party
-
+import requests
 
 # Django
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 # rest-framework
-from rest_framework import viewsets, status, permissions, generics
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 
 # local
 
 # own app
-from accounts import serializers
+from accounts import serializers, policy
 
 User = get_user_model()
 
@@ -87,13 +88,6 @@ class UserViewSet(viewsets.ModelViewSet):
         user = User.objects.get(uuid=original_response.data.get('uuid'))
         response = serializers.UserSerializer(instance=user)
         return Response(response.data, status=status.HTTP_201_CREATED)
-
-    def get_user_memberships(self, request):
-        """
-
-        :return: User MemberShips list
-        """
-        pass
 
 
 class LoginViewSet(viewsets.GenericViewSet):
