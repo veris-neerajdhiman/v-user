@@ -37,7 +37,7 @@ BASE_FIELDS = (None, {
 })
 
 PROFILE_FIELDS = (_('Profile'), {
-    'fields': ('first_name', 'last_name', 'uuid', 'avatar'),
+    'fields': ('name', 'uuid', 'avatar'),
 })
 
 PERMISSION_FIELDS = (_('Permissions'), {
@@ -60,9 +60,9 @@ class UserAdmin(DjangoUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = (USERNAME_FIELD, 'first_name', 'last_name', 'uuid', 'avatar_thumbnail', 'is_active', )
+    list_display = (USERNAME_FIELD, 'name', 'uuid', 'avatar_thumbnail', 'is_active', )
     list_display_links = (USERNAME_FIELD, 'uuid',)
-    search_fields = ('uuid', USERNAME_FIELD, 'first_name', 'last_name',)
+    search_fields = ('uuid', USERNAME_FIELD, 'name', )
     fieldsets = (
         BASE_FIELDS,
         PROFILE_FIELDS,

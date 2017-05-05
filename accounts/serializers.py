@@ -37,7 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uuid', 'first_name', 'last_name', 'email', 'avatar', 'avatar_thumbnail')
+        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -53,7 +53,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uuid', 'first_name', 'last_name', 'password', 'email', 'avatar', 'avatar_thumbnail', )
+        fields = ('uuid', 'name', 'password', 'email', 'avatar', 'avatar_thumbnail', )
 
     def create(self, validated_data):
         """
@@ -78,7 +78,7 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uuid', 'first_name', 'last_name', 'email', 'avatar', 'avatar_thumbnail', )
+        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail', )
 
     def create(self, validated_data):
         """Here we check wether already an user exists or not, If not then create else return same user instance.

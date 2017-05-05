@@ -64,16 +64,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     Store User account details.
     Support custom fields (fields other than django.contrib.auth.models.AbstractBaseUser) to be stored in db.
     """
-    first_name = models.CharField(
-        _('first name'),
-        max_length=30,
+    name = models.CharField(
+        _('name'),
+        max_length=100,
         null=True,
-        blank=True)
-    last_name = models.CharField(
-        _('last name'),
-        max_length=30,
-        null=True,
-        blank=True)
+        blank=True,
+        help_text=_('Required. 100 characters or fewer.'),
+    )
     username = models.CharField(
         _('username'),
         max_length=75,
@@ -140,12 +137,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             username=self.username,
         )
 
-    def get_full_name(self):
-        """Return full name of user"""
-        return '{0} {1}'.format(self.first_name, self.last_name)
-
     def get_short_name(self):
         """
-        Return short name of user.
+
         """
-        return '{0}'.format(self.first_name)
+        return self.name
