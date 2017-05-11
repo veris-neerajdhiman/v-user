@@ -24,7 +24,7 @@ from accounts import views
 
 UUID_REGEX = '[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'
 
-user_list = views.UserViewSet.as_view({
+user_create = views.UserViewSet.as_view({
     # 'get': 'list',
     'post': 'create'
 })
@@ -46,8 +46,8 @@ shadow_user = views.UserViewSet.as_view({
 
 urlpatterns = [
     url(r'^$',
-        user_list,
-        name='user-list'),
+        user_create,
+        name='user-create'),
     url(r'^(?P<uuid>{uuid})/$'.format(uuid=UUID_REGEX),
         user_detail,
         name='user-detail'),
