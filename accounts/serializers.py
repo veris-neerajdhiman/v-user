@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
        Since Email cannot Be updated from Here
     """
     uuid = serializers.UUIDField(read_only=True)
-    email = serializers.EmailField(source='username', read_only=True)
+    email = serializers.EmailField(read_only=True)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
@@ -45,8 +45,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     """
     uuid = serializers.UUIDField(read_only=True)
     password = serializers.CharField(required=True)
-    email = serializers.EmailField(source='username',
-                                   required=True,
+    email = serializers.EmailField(required=True,
                                    validators=[UniqueValidator(queryset=User.objects.all())]
                                    )
     avatar_thumbnail = serializers.ImageField(read_only=True)
@@ -72,8 +71,7 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
     """This Serializer is used when we are creating a shadow User.
     """
     uuid = serializers.UUIDField(read_only=True)
-    email = serializers.EmailField(source='username',
-                                   required=True )
+    email = serializers.EmailField(required=True)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
@@ -86,21 +84,20 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
         :param validated_data: serializer valid data
         :return: user instance
         """
-        # email is stored in username field and this is unique so if when we will try to create user with validated data
-        # if username field violates unique Rule , db will raise IntegrityError and we will catch this error return
+        # if email field violates unique Rule , db will raise IntegrityError and we will catch this error return
         # existing user instance.
 
         try:
             return super(ShadowUserCreateSerializer, self).create(validated_data)
         except IntegrityError:
-            return User.objects.get(username=validated_data.get('username'))
+            return User.objects.get(email=validated_data.get('email'))
 
 
 class LoginSerializer(serializers.Serializer):
     """
 
     """
-    username = serializers.CharField(required=True)
+    email = serializers.CharField(required=True)
 
     # TODO create a password field to be used
     password = serializers.CharField(required=True)

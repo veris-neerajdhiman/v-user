@@ -110,7 +110,7 @@ class LoginViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         try:
-            user = User.objects.get(username=serializer.data.get('username'))
+            user = User.objects.get(email=serializer.data.get('email'))
             if user.check_password(serializer.data.get('password')):
                 serializer = serializers.UserSerializer(instance=user)
                 return Response(serializer.data, status=status.HTTP_200_OK)

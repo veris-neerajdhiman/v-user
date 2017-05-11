@@ -71,22 +71,31 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         help_text=_('Required. 100 characters or fewer.'),
     )
-    username = models.CharField(
-        _('username'),
-        max_length=75,
+    email = models.EmailField(
+        _('email address'),
         unique=True,
-        help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[
-            validators.RegexValidator(
-                r'^[\w.@+-]+$',
-                _('Enter a valid username. This value may contain only '
-                  'letters, numbers ' 'and @/./+/-/_ characters.')
-            ),
-        ],
+        blank=False,
+        null=False,
         error_messages={
-            'unique': _("A user with that username already exists."),
-        },
+                'unique': _("A user with that email already exists."),
+            },
     )
+    # username = models.CharField(
+    #     _('username'),
+    #     max_length=75,
+    #     unique=True,
+    #     help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+    #     validators=[
+    #         validators.RegexValidator(
+    #             r'^[\w.@+-]+$',
+    #             _('Enter a valid username. This value may contain only '
+    #               'letters, numbers ' 'and @/./+/-/_ characters.')
+    #         ),
+    #     ],
+    #     error_messages={
+    #         'unique': _("A user with that username already exists."),
+    #     },
+    # )
     uuid = models.UUIDField(
         _('User Unique Identifier'),
         default=uuid.uuid4,
@@ -121,7 +130,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     class Meta:
@@ -129,12 +139,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = 'auth_user'
         verbose_name = _('user')
         verbose_name_plural = _('users')
-        ordering = ['username', ]
+        ordering = ['email', ]
 
     def __str__(self):
         return '<{uuid}>: {username}'.format(
             uuid=self.uuid,
-            username=self.username,
+            username=self.email,
         )
 
     def get_short_name(self):
