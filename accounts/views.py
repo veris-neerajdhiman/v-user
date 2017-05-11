@@ -112,7 +112,8 @@ class LoginViewSet(viewsets.GenericViewSet):
         try:
             user = User.objects.get(username=serializer.data.get('username'))
             if user.check_password(serializer.data.get('password')):
-                return Response({'token': user.uuid}, status=status.HTTP_200_OK)
+                serializer = serializers.UserSerializer(instance=user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             pass
         return Response(status=status.HTTP_401_UNAUTHORIZED)
