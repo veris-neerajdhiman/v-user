@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-- accounts..tests.test_settings
-~~~~~~~~~~~~~~
+- accounts.tests.test_settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- This file make sure all necessary settings are their for user micro-service
+- This file includes test-cases of settings which are required for user micro-service
 
 """
 
