@@ -36,7 +36,7 @@ urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^docs/', include_docs_urls(title=API_TITLE, description='')),
 
-    url(r'^micro-service/user/', include(user_routers)),
+    url(r'^micro-service/user/', include(user_routers, namespace='accounts')),
 
 ]
 
