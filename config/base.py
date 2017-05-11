@@ -56,7 +56,10 @@ DEBUG = False
 
 # ######### TEST RUNNER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/releases/dev/#new-test-runner
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+# TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = ['--with-spec', '--spec-color', '--verbosity=1', ]
+
 # ######### END TEST RUNNER CONFIGURATION
 
 
