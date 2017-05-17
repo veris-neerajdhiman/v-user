@@ -20,6 +20,7 @@ from rest_framework.validators import UniqueValidator
 # Django
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
+
 # local
 
 # own app
@@ -46,7 +47,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     uuid = serializers.UUIDField(read_only=True)
     password = serializers.CharField(required=True)
     email = serializers.EmailField(required=True,
-                                   validators=[UniqueValidator(queryset=User.objects.all())]
+                                   validators=[UniqueValidator(queryset=User.objects.filter(is_active=True))]
                                    )
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
@@ -61,7 +62,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
         :return: user object
         """
         password = validated_data.pop('password')
-        user = super(UserCreateSerializer, self).create(validated_data)
+
+        # catch exception for Integrity error (means user with same email already exists)
+        # is user is de-active (is_active=False), then make him active (is_active=true)
+        # user is de-active most probably because he was added member as first.
+        # so we can make him active
+
+        # ToDo : Handle this member/user with same email using some more convenient way.
+        # ToDo : Once Verification notifications are On then we can handle this in some other way
+
+        try:
+            user = super(UserCreateSerializer, self).create(validated_data)
+        except IntegrityError:
+            user = User.objects.get(email=validated_data.get('email'))
+
+            if user.is_active is False:
+                user.is_active = True
+
         user.set_password(password)
         user.save()
         return user
@@ -76,7 +93,7 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail', )
+        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail', 'is_active', )
 
     def create(self, validated_data):
         """Here we check wether already an user exists or not, If not then create else return same user instance.
