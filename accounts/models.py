@@ -107,7 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     avatar_thumbnail = ImageSpecField(
         source='avatar',
-        processors=[ResizeToFill(100, 50)],
+        processors=[ResizeToFill(100, 100)],
         format='JPEG',
         options={'quality': 60}
     )
