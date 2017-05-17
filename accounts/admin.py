@@ -60,7 +60,7 @@ class UserAdmin(DjangoUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = (USERNAME_FIELD, 'name', 'uuid', 'avatar_thumbnail', 'is_active', )
+    list_display = ('id', USERNAME_FIELD, 'name', 'uuid', 'avatar_thumbnail', 'is_active', )
     list_display_links = (USERNAME_FIELD, 'uuid',)
     search_fields = ('uuid', USERNAME_FIELD, 'name', )
     fieldsets = (
