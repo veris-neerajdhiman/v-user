@@ -41,7 +41,8 @@ def add_default_policies_for_user_on_am_server(sender, instance, created=False, 
         policy.add_user_policy_for_organization(instance.uuid)
 
 
-@receiver(post_save, sender=User)
+#@receiver(post_save, sender=User)
+
 def add_user_as_member_in_veris_organization(sender, instance, created=False, **kwargs):
     """Here every new user will be added in Veris Organization
 

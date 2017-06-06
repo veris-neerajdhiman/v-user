@@ -26,3 +26,5 @@ simplejson==3.10.0
 six==1.10.0
 sqlparse==0.2.3
 uritemplate==3.0.0
+gunicorn==19.7.1
+
