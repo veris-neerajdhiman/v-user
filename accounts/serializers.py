@@ -90,6 +90,7 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
     """
     uuid = serializers.UUIDField(read_only=True)
     email = serializers.EmailField(required=True)
+    avatar=serializers.ImageField(required=False)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
