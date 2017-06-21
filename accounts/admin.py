@@ -3,7 +3,7 @@
 
 """
 - accounts.admin
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 - This file contains the admin models of accounts.
 """

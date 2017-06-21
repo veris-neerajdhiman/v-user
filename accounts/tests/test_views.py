@@ -96,3 +96,32 @@ class UserTestCase(TestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, 204)
+
+    def test_shadow_user(self):
+        """Test Shadow User Create
+
+        """
+        url = reverse('accounts:get-or-create-shadow-user')
+        data = {
+            'email': 'test-m4@example.com',
+            'avatar': self.image,
+            'password': 123,
+            'is_active': False
+        }
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 201)
+
+    def test_user_email_unique(self):
+        """Test User with same email doesn't get created.
+
+        """
+        url = reverse('accounts:user-create')
+        data = {
+            'email': 'test@example.com',
+            'avatar': self.image,
+            'password': 123
+        }
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 400)

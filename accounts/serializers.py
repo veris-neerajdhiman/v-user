@@ -49,6 +49,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True,
                                    validators=[UniqueValidator(queryset=User.objects.filter(is_active=True))]
                                    )
+    avatar=serializers.ImageField(required=False)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
@@ -89,6 +90,7 @@ class ShadowUserCreateSerializer(serializers.ModelSerializer):
     """
     uuid = serializers.UUIDField(read_only=True)
     email = serializers.EmailField(required=True)
+    avatar=serializers.ImageField(required=False)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
