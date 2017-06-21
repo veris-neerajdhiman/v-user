@@ -3,7 +3,7 @@
 
 """
 - accounts.models
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 - This file contains the Accounts(user) models that will map into DB tables.
 
@@ -19,7 +19,6 @@ from imagekit.processors import ResizeToFill
 
 # Django
 from django.db import models
-from django.core import validators
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
