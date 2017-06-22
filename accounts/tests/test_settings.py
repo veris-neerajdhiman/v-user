@@ -29,7 +29,7 @@ class SettingsTestCase(TestCase):
         self.env_settings = ['AM_SERVER_URL', ]
 
     def test_environment_variables(self):
-        """makes sure all env variables which are necessary for running User micro-service are defined in settings
+        """makes sure settings which are necessary for running Organization micro-service are defined in settings.
 
         """
 

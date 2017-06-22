@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-- accounts.tests.test_models
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- accounts.tests.test_views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - This file includes Test cases for Views .
 
