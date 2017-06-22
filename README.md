@@ -80,10 +80,10 @@ pip install -r requirements/local.txt
 pip install -r requirements/production.txt
 
 ```
-4 ) Prerequisites
+5 ) Prerequisites
 - Makes sure above `Prerequisites` we mentioned above must be defined and fulfilled.
 
-5 ) Run Server 
+6 ) Run Server 
 ```
 python manage.py runserver
 ```
