@@ -39,6 +39,55 @@
 	(user primary key will not be disclosed)
 	
 
+
+## Installation :
+
+1 ) Clone this repo
+
+2 ) Setup virtual environment
+```
+cd <path-to-repo>/drf-pyotp/
+
+virtualenv -p /usr/bin/python3 env
+
+```
+
+3 ) Activate Virtual environment
+```
+source env/bin/activate
+```
+4 ) Install requirements
+
+- Base Requirements
+
+```
+pip install -r requirements/base.txt
+
+```
+- Testing Requirements
+```
+pip install -r requirements/test.txt
+
+```
+- Local requirements
+```
+pip install -r requirements/local.txt
+
+```
+- Production requirements
+
+```
+pip install -r requirements/production.txt
+
+```
+4 ) Prerequisites
+- Makes sure above `Prerequisites` we mentioned above must be defined and fulfilled.
+
+5 ) Run Server 
+```
+python manage.py runserver
+```
+
 ## API Reference : 
 
 - API documentation is hosted on [Swagger hub](https://app.swaggerhub.com/apis/verisadmin/v-user/0.1) 
