@@ -46,7 +46,7 @@
 
 2 ) Setup virtual environment
 ```
-cd <path-to-repo>/drf-pyotp/
+cd <path-to-repo>/v-user/
 
 virtualenv -p /usr/bin/python3 env
 
