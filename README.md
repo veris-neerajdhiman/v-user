@@ -52,8 +52,8 @@ and is public.
 ## Tests : 
 
 - Run tests using 
-```python
-python manage.py test
+```
+make test
 ```
  
  
