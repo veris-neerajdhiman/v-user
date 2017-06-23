@@ -56,7 +56,7 @@ class EnvironmentVariableTestCase(TestCase):
         """
         """
         self.env_variables = (
-            'DATABASE_NAME_AUTH',
+            'DATABASE_NAME_USER',
             'DATABASE_USER',
             'DATABASE_PASSWORD',
             'DATABASE_HOST',
