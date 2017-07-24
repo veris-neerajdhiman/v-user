@@ -20,6 +20,7 @@ from rest_framework.validators import UniqueValidator
 # Django
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
+from django.conf import settings
 
 # local
 
@@ -35,10 +36,18 @@ class UserSerializer(serializers.ModelSerializer):
     uuid = serializers.UUIDField(read_only=True)
     email = serializers.EmailField(read_only=True)
     avatar_thumbnail = serializers.ImageField(read_only=True)
+    scope = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail')
+        fields = ('uuid', 'name', 'email', 'avatar', 'avatar_thumbnail', 'scope', )
+
+    def get_scope(self, obj):
+        """
+
+        :return: User scopes.
+        """
+        return getattr(settings, 'USER_SCOPES', None)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -49,7 +58,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True,
                                    validators=[UniqueValidator(queryset=User.objects.filter(is_active=True))]
                                    )
-    avatar=serializers.ImageField(required=False)
+    avatar = serializers.ImageField(required=False)
     avatar_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:

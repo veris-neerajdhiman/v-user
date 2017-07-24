@@ -25,14 +25,13 @@ from accounts import views
 UUID_REGEX = '[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'
 
 user_create = views.UserViewSet.as_view({
-    # 'get': 'list',
-    'post': 'create'
+    'post': 'create',
 })
 
 user_detail = views.UserViewSet.as_view({
     'get': 'retrieve',
     'patch': 'partial_update',
-    'delete': 'destroy'
+    # 'delete': 'destroy'
 })
 
 user_login = views.LoginViewSet.as_view({
@@ -45,13 +44,13 @@ shadow_user = views.UserViewSet.as_view({
 
 
 urlpatterns = [
-    url(r'^$',
+    url(r'create/$',
         user_create,
         name='user-create'),
-    url(r'^(?P<uuid>{uuid})/$'.format(uuid=UUID_REGEX),
+    url(r'detail/$',
         user_detail,
         name='user-detail'),
-    url(r'^login/$'.format(uuid=UUID_REGEX),
+    url(r'^login/$',
         user_login,
         name='user-login'),
     url(r'^shadow/$',

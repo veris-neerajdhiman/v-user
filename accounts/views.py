@@ -3,7 +3,7 @@
 
 """
 - accounts.views
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 - - This file holds the code for resolving any URL/Router, to resolve any API every request will go through here.
 """
@@ -12,11 +12,12 @@
 from __future__ import unicode_literals
 
 # 3rd party
-import requests
+from datetime import datetime, timedelta
 
 # Django
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 # rest-framework
 from rest_framework import viewsets, status, permissions
@@ -25,7 +26,8 @@ from rest_framework.response import Response
 # local
 
 # own app
-from accounts import serializers, policy
+from auth.jwt import create_jwt
+from accounts import serializers
 
 User = get_user_model()
 
@@ -36,11 +38,21 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     model = User
     queryset = model.objects.all()
-    # TODO : remove AllowAny permission with proper permission class
-    # TODO : User Self permission are not handled via AM server, handle them using AM
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.UserSerializer
-    lookup_field = 'uuid'
+
+    def get_object(self):
+        """
+        Returns the object the view is displaying.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        obj = get_object_or_404(queryset, **{'pk': self.request.user.pk})
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
     def get_queryset(self):
         """
@@ -54,6 +66,15 @@ class UserViewSet(viewsets.ModelViewSet):
         if is_active is not None:
             queryset = queryset.filter(is_active=is_active)
         return queryset
+
+    def get_permissions(self):
+        """
+
+        :return:
+        """
+        if self.request.method == 'POST':
+            self.permission_classes = (permissions.AllowAny,)
+        return super(UserViewSet, self).get_permissions()
 
     def get_serializer_class(self):
         """For POST method we will use different Serializer
@@ -74,20 +95,41 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = serializers.ShadowUserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
 
-        :param request:
+        :param request: Django request
         :return:
         """
-        # ToDo: juggad to avoid password in response.Fix It with some permanent solution.
+        serializer_cls = self.get_serializer_class()
+        serializer = serializer_cls(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
 
-        original_response = super(UserViewSet, self).create(request)
-        user = User.objects.get(uuid=original_response.data.get('uuid'))
-        response = serializers.UserSerializer(instance=user)
-        return Response(response.data, status=status.HTTP_201_CREATED)
+        # generate user json web token
+        payload = get_jwt_payload(user)
+        token = create_jwt(payload,
+                           getattr(settings, 'JWT_PUBLIC_KEY', None),
+                           getattr(settings, 'ALGORITHM', 'HS256'))
+        return Response({'token': token}, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+
+        :param request: Django Request
+        :return: User detail
+        """
+        return super(UserViewSet, self).retrieve(request, instance=request.user, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        """
+
+        :param request: Django Request
+        :return: User detail
+        """
+        return super(UserViewSet, self).partial_update(request, instance=request.user, *args, **kwargs)
 
 
 class LoginViewSet(viewsets.GenericViewSet):
@@ -95,26 +137,42 @@ class LoginViewSet(viewsets.GenericViewSet):
     We'll keep the LoginView simple for now.
     """
     serializer_class = serializers.LoginSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
     def user_login(self, request):
         """
         :param request: Django request
-        :return:
+        :return: Json web token
         """
-        # Will only match user name password for now and return user unique uuid in place of token
-        # because right ow not sure how we will do authentication.
 
-        # ToDo : Replace login process with some valid Login Mechanism
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        try:
-            user = User.objects.get(email=serializer.data.get('email'))
-            if user.check_password(serializer.data.get('password')):
-                serializer = serializers.UserSerializer(instance=user)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            pass
+        # try:
+        user = User.objects.get(email=serializer.data.get('email'))
+        if user.check_password(serializer.data.get('password')):
+            payload = get_jwt_payload(user)
+            token = create_jwt(payload,
+                               getattr(settings, 'JWT_PUBLIC_KEY', None),
+                               getattr(settings, 'ALGORITHM', 'HS256'))
+            return Response({'token': token}, status=status.HTTP_200_OK)
+        # except:
+        #     pass
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+
+def get_jwt_payload(user):
+    """
+
+    :param user: User object
+    :return: jwt necessary information
+    """
+    expiration_time = datetime.utcnow() + timedelta(seconds=getattr(settings, 'TOKEN_EXPIRATION_TIME', 432000))
+
+    return {
+        'user_info': serializers.UserSerializer(instance=user).data,
+        'exp': expiration_time,
+        'iat': datetime.utcnow(),
+        'iss': getattr(settings, 'ISSUER', 'noapp'),
+        'aud': getattr(settings, 'AUDIENCE', 'noapp-services')
+    }
