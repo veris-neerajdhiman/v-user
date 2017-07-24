@@ -304,13 +304,12 @@ REST_FRAMEWORK = {
         'rest_framework_swagger.renderers.OpenAPIRenderer',
         'rest_framework_swagger.renderers.SwaggerUIRenderer',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    ],
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'auth.backends.JWTAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.OrderingFilter',
@@ -321,19 +320,22 @@ REST_FRAMEWORK = {
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
 
+# ################# JWT ########################
 
-# SERVICE UUID's Which can be assigned to USer
-ORGANIZATION_IDENTIFIER = get_env_setting('ORGANIZATION_IDENTIFIER')
-RUNTIME_IDENTIFIER = get_env_setting('VRT_IDENTIFIER')
+ISSUER = 'noapp'
+AUDIENCE = 'noapp-services'
+ALGORITHM = 'HS256'
+TOKEN_EXPIRATION_TIME = 432000  # (in seconds)
+JWT_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzj8vNzN+TPPeg4VJefx5dzvwJVvjLgRs+bd7iZbOl2JJnyNlMcMc5pJ2CrN+78IvnAsr/Vh57ZJEwy5y+MPxjjf8U5LmlgM65lpMN07I3SST8jRWYr1+KX50e7vvueYRY8y7sSkKVMIbqgu7tOfcsbsyk/MStuJQPFFPBun0CuqA4JXvtQwS+y4Qb7UbjhmkCsfRzBiV34uODja8QjXWvdF/n01VGG4wd0898Pzb7CogebMUvfGk7/3K82x1hZBotHxKDNYz/TPIr0+v/+MK5UxoLedHueMdwxJNtY2ska2wBQQ0avN6EV5NMGV2k/OrP0kQ7cQwi6MW71IrwtntKwIDAQAB"
 
-DEFAULT_ORGANIZATION_PERMISSION_SET = {
-    'create': True,
-    'update': True,
-    'delete': True,
-    'read': True
-}
+# ################## ENDS JWT ###############################
 
-# AM SERVER API's URL's
-AM_SERVER_URL = get_env_setting('AM_SERVER_URL')
-ADD_POLICY_API_PATH = 'micro-service/am/policy/'
-VALIDATE_POLICY_API_PATH = 'micro-service/am/policy/validate/'
+# user scopes (permissions)
+USER_SCOPES = ('templates',
+               'vault',
+               'process',
+               'runtime',
+               'widget',
+               'organization',
+               'member',)
+
