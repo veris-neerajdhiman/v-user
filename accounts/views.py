@@ -113,7 +113,13 @@ class UserViewSet(viewsets.ModelViewSet):
         token = create_jwt(payload,
                            getattr(settings, 'JWT_PUBLIC_KEY', None),
                            getattr(settings, 'ALGORITHM', 'HS256'))
-        return Response({'token': token}, status=status.HTTP_201_CREATED)
+
+        response = serializers.UserSerializer(instance=user).data
+        response.update({
+            'token': token
+        })
+
+        return Response(response, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -148,16 +154,21 @@ class LoginViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # try:
-        user = User.objects.get(email=serializer.data.get('email'))
-        if user.check_password(serializer.data.get('password')):
-            payload = get_jwt_payload(user)
-            token = create_jwt(payload,
-                               getattr(settings, 'JWT_PUBLIC_KEY', None),
-                               getattr(settings, 'ALGORITHM', 'HS256'))
-            return Response({'token': token}, status=status.HTTP_200_OK)
-        # except:
-        #     pass
+        try:
+            user = User.objects.get(email=serializer.data.get('email'))
+            if user.check_password(serializer.data.get('password')):
+                payload = get_jwt_payload(user)
+                token = create_jwt(payload,
+                                   getattr(settings, 'JWT_PUBLIC_KEY', None),
+                                   getattr(settings, 'ALGORITHM', 'HS256'))
+
+                response = serializers.UserSerializer(instance=user).data
+                response.update({
+                    'token': token
+                })
+                return Response(response, status=status.HTTP_200_OK)
+        except:
+            pass
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
