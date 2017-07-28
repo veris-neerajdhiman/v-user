@@ -336,6 +336,5 @@ USER_SCOPES = ('templates',
                'process',
                'runtime',
                'widget',
-               'organization',
-               'member',)
+               'organization')
 
