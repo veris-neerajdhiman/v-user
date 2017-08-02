@@ -181,7 +181,7 @@ def get_jwt_payload(user):
     expiration_time = datetime.utcnow() + timedelta(seconds=getattr(settings, 'TOKEN_EXPIRATION_TIME', 432000))
 
     return {
-        'user_info': serializers.UserSerializer(instance=user).data,
+        'info': serializers.UserSerializer(instance=user).data,
         'exp': expiration_time,
         'iat': datetime.utcnow(),
         'iss': getattr(settings, 'ISSUER', 'noapp'),
